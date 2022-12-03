@@ -15,6 +15,7 @@ namespace DataAccess.Concrete.EntityFramewrok
         {
             optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=ReCar;Integrated Security=True;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
+        //Entity Framework ORM Yaklaşımı
 
         public DbSet<Car>? Cars { get; set; }
 
@@ -29,6 +30,10 @@ namespace DataAccess.Concrete.EntityFramewrok
         public DbSet<Customer>? Customers { get; set; }
 
         public DbSet<CarImage>? CarImages { get; set; }
+
+        public DbSet<OperationClaim>? OperationClaims { get; set; }
+
+        public DbSet<UserOperationClaim>? UserOperationClaims { get; set; }
 
     }
 }

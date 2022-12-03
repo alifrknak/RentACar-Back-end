@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Core.DataAccess.EntityFramework
 {
     public class EfRepositroyBase<TEntity, TContext> : IEntityRepository<TEntity>
-    where TEntity : class, IEntity, new()
+    where TEntity : class,  IEntity, new()
     where TContext : DbContext, new()
 
     {
@@ -34,19 +34,19 @@ namespace Core.DataAccess.EntityFramework
             }
         }
 
-        public TEntity Get(Func<TEntity, bool> filter = null)
+        public TEntity? Get(Func<TEntity, bool>? filter = null)
         {
             using (TContext context = new TContext())
             {
                 if (filter != null)
                 {
-                    return context.Set<TEntity>().Single(filter);
+                    return context.Set<TEntity>().SingleOrDefault(filter);
                 }
                 throw new Exception("id gir");
             }
         }
 
-        public List<TEntity> GetAll(Func<TEntity, bool> filter = null)
+        public List<TEntity> GetAll(Func<TEntity, bool>? filter = null)
         {
             using (TContext context = new TContext())
             {

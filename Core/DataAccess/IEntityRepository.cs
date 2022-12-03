@@ -9,9 +9,9 @@ namespace Core.DataAccess
 {
     public interface IEntityRepository<T>
     {
-        List<T> GetAll(Func<T, bool> filter = null);
+        List<T>? GetAll(Func<T, bool>? filter = null);
 
-        T? Get(Func<T, bool> filter = null);
+        T? Get(Func<T, bool>? filter = null);
 
         void Add(T entity);
 

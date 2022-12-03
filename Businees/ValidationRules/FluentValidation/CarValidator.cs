@@ -14,7 +14,7 @@ namespace Businees.ValidationRules.FluentValidation
         public CarValidator()
         {
             RuleFor(q => q.ModelYear).LessThan(DateTime.Now.Year);
-            RuleFor(q => q.Description).MinimumLength(5);
+            RuleFor(q => q.Description).MinimumLength(3);
             RuleFor(q => q.DailyPrice).NotEmpty();
             RuleFor(q => q.BrandId).NotEmpty();
             RuleFor(q => q.ColorId).NotEmpty();

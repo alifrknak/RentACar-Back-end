@@ -4,6 +4,7 @@ using Businees.Abstract;
 using Businees.Concrete;
 using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
+using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramewrok;
 using Entities.Concrete;
@@ -12,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Businees.Concrete.UserManager;
 
 namespace Businees.DependencyResolvers.Autofac
 {
@@ -46,12 +48,15 @@ namespace Businees.DependencyResolvers.Autofac
             builder.RegisterType<CarImageManager>().As<ICarImageService>().SingleInstance();
 
 
-            // tek nesne ütetir
+			builder.RegisterType<AuthManager>().As<IAuthService>().SingleInstance();
+			builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
 
-            // bir adet nesne uretir herkes onu kullanır  dikkat data tutmaması gerektir
+			// tek nesne ütetir
+
+			// bir adet nesne uretir herkes onu kullanır  dikkat data tutmaması gerektir
 
 
-            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+			var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
                 .EnableInterfaceInterceptors(new ProxyGenerationOptions()
