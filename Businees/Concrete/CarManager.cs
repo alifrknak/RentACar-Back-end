@@ -20,73 +20,87 @@ namespace Businees.Concrete
 {
     public class CarManager : ICarService
     {
-        ICarDal _car;
+        ICarDal _carDal;
+        IBrandService _brandService;
+        IColorService _colorService;
 
-        public CarManager(ICarDal car)
-        {
-            _car = car;
-        }
+		public CarManager(ICarDal car, IBrandService brandService, IColorService colorService)
+		{
+			_carDal = car;
+			_brandService = brandService;
+			_colorService = colorService;
+		}
 
-        [SecuredOperation("admin")]
+	//	[SecuredOperation("admin")]
         [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
             var result = BusinessRules.Run
                 (
-                   CheckIfCarCountOfBrandCorrect(car.BrandId),
-                   CheckIfCarCountOfModelYearsCorrect(car.ModelYear)
-                );
+                   CheckIfCarCountOfModelYearsCorrect(car.ModelYear),
+                   CheckIfCarBrandExist(car.BrandId),
+                   CheckIfCarColorExist(car.ColorId)
+				);
 
             if (result == null)
             {
-                _car.Add(car);
+                _carDal.Add(car);
                 return new SuccessResult();
             }
             return result;
         }
 
-        public IResult Delete(Car car)
+
+		public IResult Delete(Car car)
         {
-            _car.Delete(car);
+            _carDal.Delete(car);
             return new SuccessResult();
         }
 
-        public IDataResult<List<Car>> GetAll()
+		//[SecuredOperation("admin")]
+		public IDataResult<List<Car>> GetAll()
         {
-            return new SuccessDataResult<List<Car>>(_car.GetAll());
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll());
         }
 
         public IDataResult<List<Car>> GetByBrand(int brandId)
         {
-            return new SuccessDataResult<List<Car>>(_car.GetAll(q => q.BrandId == brandId));
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(q => q.BrandId == brandId));
         }
 
         public IDataResult<Car> GetById(int id)
         {
-            return new SuccessDataResult<Car>(_car.Get(q => q.Id == id));
+            return new SuccessDataResult<Car>(_carDal.Get(q => q.Id == id));
         }
 
-        public IDataResult<List<CarDetailDto>> GetCarDetails()
+        //view oluştur database de
+        public IDataResult<CarDetailDto> GetCarDetails(int carId)
         {
-            return new SuccessDataResult<List<CarDetailDto>>(_car.GetCarDetails());
+            return new SuccessDataResult<CarDetailDto>(_carDal.GetCarDetails(carId));
         }
         [ValidationAspect(typeof(CarValidator))]
         public IResult Update(Car car)
         {
-            _car.Update(car);
+            _carDal.Update(car);
             return new SuccessResult();
         }
 
+		public IDataResult<List<Car>> GetByColor(int colorId)
+		{
+            var rst = _carDal.GetAll(q => q.ColorId == colorId);
+
+			return new SuccessDataResult<List<Car>>(rst);
+
+		}
 
 
+		///
+		//
+		//
+		//
+		///
 
-        ///
-        //
-        //
-        //
-        ///
-
-        private IResult CheckIfCarCountOfModelYearsCorrect(int modelYear)
+		private IResult CheckIfCarCountOfModelYearsCorrect(int modelYear)
         {
             if (modelYear < 1980)
             {
@@ -95,16 +109,18 @@ namespace Businees.Concrete
             return new SuccessResult();
         }
 
-        private IResult CheckIfCarCountOfBrandCorrect(int brandId)
-        {
-            int result = _car.GetAll(q => q.BrandId == brandId).Count;
+		private IResult CheckIfCarColorExist(int colorId)
+		{
+		    var check = _colorService.GetById(colorId);
 
-            if (result >= 20)
-            {
-                return new ErrorResult();
-            }
-            return new SuccessResult();
-        }
-
-    }
+            return  check.Data != null ? new SuccessResult() : new ErrorResult();
+		}
+        
+		private IResult CheckIfCarBrandExist(int brandId)
+		{
+            var check = _brandService.GetById(brandId);
+			
+            return check.Data != null ? new SuccessResult() : new ErrorResult();
+		}
+	}
 }

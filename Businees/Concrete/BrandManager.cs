@@ -2,6 +2,7 @@
 using Businees.Constant;
 using Businees.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -15,27 +16,34 @@ namespace Businees.Concrete
 {
     public class BrandManager : IBrandService
     {
-        IBrandDal _brand;
+        IBrandDal _brandDal;
 
         public BrandManager(IBrandDal brandDal)
         {
-            _brand = brandDal;
+            _brandDal = brandDal;
         }
         [ValidationAspect(typeof(BrandValidator))]
         public IResult Add(Brand brand)
         {
-            if (brand.Name.Length < 2)
-            {
-                return new ErrorResult(Messages.ProductNameInValid);
-            }
-            _brand.Add(brand);
+            var rst = BusinessRules.Run(
+                CheckBrandExits(brand.Name)
+                );
 
-            return new SuccessResult(Messages.ProductAdded);
+            if (rst == null)
+            {
+				_brandDal.Add(brand);
+
+				return new SuccessResult();
+			}
+
+            return rst;
         }
 
-        public IResult Delete(Brand brand)
+		
+
+		public IResult Delete(Brand brand)
         {
-            _brand.Delete(brand);
+            _brandDal.Delete(brand);
             return new SuccessResult();
         }
 
@@ -43,23 +51,49 @@ namespace Businees.Concrete
         {
             if (DateTime.Now.Hour > 22)
             {
-                return new ErrorDataResult<List<Brand>>(_brand.GetAll(), Messages.Maintenancetime);
+                return new ErrorDataResult<List<Brand>>(_brandDal.GetAll());
             }
 
-            return new SuccessDataResult<List<Brand>>(_brand.GetAll());
+            return new SuccessDataResult<List<Brand>>(_brandDal.GetAll());
         }
 
         public IDataResult<Brand> GetById(int id)
         {
-            return new SuccessDataResult<Brand>(_brand.Get(q => q.Id == id));
+            return new SuccessDataResult<Brand>(_brandDal.Get(q => q.Id == id));
         }
 
+		public IResult CheckByName(string brandName)
+		{
+            var rst = _brandDal.Get(q => q.Name == brandName);
+
+            return rst != null ? new SuccessResult() : new ErrorResult();
+
+		}
 
 		[ValidationAspect(typeof(BrandValidator))]
 		public IResult Update(Brand brand)
         {
-            _brand.Update(brand);
+            _brandDal.Update(brand);
             return new SuccessResult();
         }
-    }
+
+
+		public IDataResult<Brand> GetByName(string name)
+		{
+            var rst = _brandDal.Get(q => q.Name == name);
+
+            return rst != null ? new SuccessDataResult<Brand>(rst) : new ErrorDataResult<Brand>(rst);
+		}
+
+
+		//
+
+		private IResult CheckBrandExits(string name)
+		{
+           var check =  _brandDal.Get(q => q.Name == name);
+
+            return check == null ? new SuccessResult() : new ErrorResult();
+		}
+
+	}
 }

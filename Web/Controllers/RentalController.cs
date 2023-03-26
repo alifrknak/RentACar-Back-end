@@ -14,16 +14,13 @@ namespace Web.Controllers
         {
             _rentalService = rentalService;
         }
+
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
             var rst = _rentalService.GetAll();
 
-            if (rst.Success)
-            {
-                return Ok(rst);
-            }
-            return BadRequest(rst);
+            return rst.Success ? Ok(rst) : BadRequest(rst);
         }
 
 
@@ -32,23 +29,16 @@ namespace Web.Controllers
         {
             var rst = _rentalService.GetById(brandid);
 
-            if (rst.Success)
-            {
-                return Ok(rst);
-            }
-            return BadRequest(rst);
-        }
+			return rst.Success ? Ok(rst) : BadRequest(rst);
 
-        [HttpPost("add")]
+		}
+
+		[HttpPost("add")]
         public IActionResult Add(Rental rental)
         {
             var rst = _rentalService.Add(rental);
 
-            if (rst.Success)
-            {
-                return Ok(rst);
-            }
-            return BadRequest(rst);
+            return rst.Success ? Ok(rst) : BadRequest(rst);
         }
 
         [HttpDelete("delete")]
@@ -56,11 +46,7 @@ namespace Web.Controllers
         {
             var rst = _rentalService.Delete(rental);
 
-            if (rst.Success)
-            {
-                return Ok(rst);
-            }
-            return BadRequest(rst);
+            return rst.Success ? Ok(rst) : BadRequest(rst);
         }
 
         [HttpPost("update")]
@@ -68,11 +54,7 @@ namespace Web.Controllers
         {
             var rst = _rentalService.Update(rental);
 
-            if (rst.Success)
-            {
-                return Ok(rst);
-            }
-            return BadRequest(rst);
+            return rst.Success ? Ok(rst) : BadRequest(rst);
         }
 
         [HttpGet("bybrand")]
@@ -80,11 +62,17 @@ namespace Web.Controllers
         {
             var rst = _rentalService.GetById(id);
 
-            if (rst.Success)
-            {
-                return Ok(rst);
-            }
-            return BadRequest(rst);
+            return rst.Success ? Ok(rst) : BadRequest(rst);
         }
-    }
+
+        [HttpGet("isrental")]
+        public IActionResult IsCarRental(int carId)
+        {
+            var rst = _rentalService.IsCarRental(carId);
+
+            return Ok(rst);
+
+        }
+
+	}
 }

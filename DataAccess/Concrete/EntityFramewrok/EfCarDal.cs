@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.EntityFramewrok
 {
-    public class EfCarDal : EfRepositroyBase<Car, RentContext>, ICarDal
+    public class EfCarDal : EfEntityRepositoryBase<Car, RentContext>, ICarDal
     {
-        public List<CarDetailDto> GetCarDetails()
+        public CarDetailDto GetCarDetails(int carId)
         {
             // CarName, BrandName, ColorName, DailyPrice
 
@@ -24,7 +24,7 @@ namespace DataAccess.Concrete.EntityFramewrok
                              on i.ColorId equals c.Id
                              join b in context.Brands
                              on i.BrandId equals b.Id
-
+                             where i.Id == carId
                              select new CarDetailDto()
                              {
                                  BrandName = b.Name,
@@ -33,7 +33,7 @@ namespace DataAccess.Concrete.EntityFramewrok
                                  Descrip = i.Description
                              };
 
-                return result.ToList();
+                return result.ToList()[0];
             }
 
         }

@@ -26,11 +26,11 @@ namespace Businees.Concrete
 		public IResult Add(Rental rental)
         {
             var result = BusinessRules.Run(
-                
                 CheckCustomerExist(rental.CustomerId),
                 CheckCarExist(rental.CarId)
                 );
           
+
             if(result == null)
             {
                 _rentalDal.Add(rental);
@@ -65,11 +65,18 @@ namespace Businees.Concrete
             return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll());
         }
 
+		public IResult IsCarRental(int carId)
+		{
+            var result = BusinessRules.Run(
+                CheckCarisRental(carId)
+                );
+
+            return result == null ? new SuccessResult() : new ErrorResult();
+		}
 
 
 
-
-        // business ruler 
+		// business ruler 
 
 
 		private IResult CheckCustomerExist(int customerId)
@@ -93,6 +100,20 @@ namespace Businees.Concrete
 			}
 			return new SuccessResult();
 
+		}
+
+        private IResult CheckCarisRental(int carId)
+        {
+            var rst = _rentalDal.GetAll(q => q.CarId == carId);
+
+            if (rst.Count > 0)
+            {
+				var isNull = rst.Where(q => q.ReturnDate == null).Any();
+
+                return !isNull ? new SuccessResult() : new ErrorResult();
+			}
+
+            return new SuccessResult();
 		}
 	}
 }

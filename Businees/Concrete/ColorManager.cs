@@ -1,8 +1,10 @@
 ﻿using Businees.Abstract;
 using Businees.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFramewrok;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -14,42 +16,78 @@ namespace Businees.Concrete
 {
     public class ColorManager : IColorService
     {
-        IColorDal _color;
+        IColorDal _colorDal;
 
         public ColorManager(IColorDal colorDal)
         {
-            _color = colorDal;
+            _colorDal = colorDal;
         }
 
         [ValidationAspect(typeof(Colorvalidator))]
         public IResult Add(Color color)
         {
-            _color.Add(color);
-            return new SuccessResult();
+
+			var rst = BusinessRules.Run(
+				CheckBrandExits(color.Name)
+				);
+
+			if (rst == null)
+			{
+				_colorDal.Add(color);
+
+				return new SuccessResult();
+			}
+
+			return rst; ;
         }
 
-        public IResult Delete(Color color)
+		public IResult Delete(Color color)
         {
-            _color.Delete(color);
+            _colorDal.Delete(color);
             return new SuccessResult();
         }
 
         public IDataResult<List<Color>> GetAll()
         {
-            return new SuccessDataResult<List<Color>>(_color.GetAll());
+            return new SuccessDataResult<List<Color>>(_colorDal.GetAll());
         }
 
         public IDataResult<Color> GetById(int id)
         {
-            return new SuccessDataResult<Color>(_color.Get(q => q.Id == id));
+            return new SuccessDataResult<Color>(_colorDal.Get(q => q.Id == id));
         }
 
+		public IResult CheckByName(string colorName)
+		{
+            var rst = _colorDal.Get(q => q.Name == colorName);
+
+            return rst != null ? new SuccessResult() : new ErrorResult();
+		}
 
 		[ValidationAspect(typeof(Colorvalidator))]
 		public IResult Update(Color color)
         {
-            _color.Update(color);
+            _colorDal.Update(color);
             return new SuccessResult();
         }
-    }
+		public IDataResult<Color> GetByName(string colorName)
+		{
+            var rst = _colorDal.Get(q => q.Name == colorName);
+
+			return rst != null ? new SuccessDataResult<Color>(rst) : new ErrorDataResult<Color>(rst);
+
+		}
+
+
+		///
+
+		private IResult CheckBrandExits(string name)
+		{
+			var check = _colorDal.Get(q => q.Name == name);
+
+			return check == null ? new SuccessResult() : new ErrorResult();
+		}
+
+		
+	}
 }

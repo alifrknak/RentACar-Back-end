@@ -1,108 +1,62 @@
 ﻿using Businees.Abstract;
 using Entities.Concrete;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using Web.Models;
 
-
-namespace Web.Controllers 
+namespace Web.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CarsController : Controller
-    {
-        readonly ICarService _carService;
+	[Route("api/[controller]")]
+	[ApiController]
+	public class CarsController : ControllerBase
+	{
+		ICarService _carService;
 
-        public CarsController(ICarService carService)
-        {
-            _carService = carService;
-           
-        }
-        
-        [HttpGet("getall")]
-        public IActionResult GetAll()
-        {
-            var rst = _carService.GetAll();
-           
-            if (rst.Success)
-            {
-                return Ok(rst);
-            }
-            return BadRequest(rst);
-        }
+		public CarsController(ICarService carService)
+		{
+			_carService = carService;
+		}
 
+		[HttpPost("add")]
+		public IActionResult Add(Car car)
+		{
+			var rst = _carService.Add(car);
 
-        [HttpGet("getbyid")]
-        public IActionResult GetById(int carid)
-        {
-            var rst = _carService.GetById(carid);
+			return rst.Success ? Ok(rst) : BadRequest(rst);
 
-            if (rst.Success)
-            {
-                return Ok(rst);
-            }
-            return BadRequest(rst);
-        }
+		}
 
-        [HttpPost("add")]
-        public IActionResult Add(Entities.Concrete.Car car)
-        {
-            var rst = _carService.Add(car);
+		[HttpGet("getall")]
+		public IActionResult GetAll()
+		{
+			var rst = _carService.GetAll();
 
-            if (rst.Success)
-            {
-                return Ok(rst);
-            }
-            return BadRequest(rst);
-        }
+			return rst.Success ? Ok(rst) : BadRequest(rst);
+		}
 
-        [HttpDelete("delete")]
-        public IActionResult Delete(Entities.Concrete.Car car)
-        {
-            var rst = _carService.Delete(car);
+		[HttpGet("getbybrand")]
+		public IActionResult GetByBrand(int brandId)
+		{
+			var rst = _carService.GetByBrand(brandId);
 
-            if (rst.Success)
-            {
-                return Ok(rst);
-            }
-            
-            return BadRequest(rst);
-        }
+			return rst.Success ? Ok(rst) : BadRequest(rst);
 
-        [HttpPost("update")]
-        public IActionResult Update(Entities.Concrete.Car car)
-        {
-            var rst = _carService.Update(car);
+		}
 
-            if (rst.Success)
-            {
-                return Ok(rst);
-            }
-            return BadRequest(rst);
-        }
+		[HttpGet("getbycolor")]
+		public IActionResult GetByColor(int colorId)
+		{
+			var rst = _carService.GetByColor(colorId);
+			
+			return rst.Success ? Ok(rst) : BadRequest(rst);
 
-        [HttpGet("bybrand")]
-        public IActionResult GetByBrand(int id)
-        {
-            var rst = _carService.GetByBrand(id);
+		}
 
-            if (rst.Success)
-            {
-                return Ok(rst);
-            }
-            return BadRequest(rst);
-        }
-
-        [HttpGet("detail")]
-        public IActionResult GetCarDetails(Entities.Concrete.Car car)
-        {
-            var rst = _carService.GetCarDetails();
-
-            if (rst.Success)
-            {
-                return Ok(rst);
-            }
-            return BadRequest(rst);
-        }
-    }
+		[HttpGet("getcardetailsbyid")]
+		public IActionResult GetCarDetails(int carId) 
+		{
+			var  rst = _carService.GetCarDetails(carId);
+			
+			return rst.Success ? Ok(rst) : BadRequest(rst);
+		}
+	}
 }

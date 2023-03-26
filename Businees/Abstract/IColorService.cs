@@ -22,5 +22,9 @@ namespace Businees.Abstract
 
         IResult Delete(Color color);
 
-    }
+        IDataResult<Color> GetByName(string colorName);
+        IResult CheckByName(string colorName);
+
+
+	}
 }

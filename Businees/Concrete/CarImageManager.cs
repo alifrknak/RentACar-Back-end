@@ -17,7 +17,7 @@ using IResult = Core.Utilities.Results.IResult;
 namespace Businees.Concrete
 {
     public class CarImageManager : ICarImageService
-    {
+	{
         ICarImageDal _carImageDal;
 
         public CarImageManager(ICarImageDal carImageDal)

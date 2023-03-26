@@ -17,13 +17,11 @@ using static Businees.Concrete.UserManager;
 
 namespace Businees.DependencyResolvers.Autofac
 {
-    public class AutofacBusinessModule : Module   //Autofac
+    public class AutofacBusinessModule : Module   
     {
 
-        // calısma anında calışır.
         protected override void Load(ContainerBuilder builder)
         {
-            /// builder.Services.AddSingleton<IProductDal,EfProductDal>(); karşılık geliyor
 
             builder.RegisterType<CarManager>().As<ICarService>().SingleInstance();
             builder.RegisterType<EfCarDal>().As<ICarDal>().SingleInstance();
@@ -43,7 +41,6 @@ namespace Businees.DependencyResolvers.Autofac
             builder.RegisterType<EfUserDal>().As<IUserDal>().SingleInstance();
             builder.RegisterType<UserManager>().As<IUserService>().SingleInstance();
 
-
             builder.RegisterType<EfCarImageDal>().As<ICarImageDal>().SingleInstance();
             builder.RegisterType<CarImageManager>().As<ICarImageService>().SingleInstance();
 
@@ -51,9 +48,6 @@ namespace Businees.DependencyResolvers.Autofac
 			builder.RegisterType<AuthManager>().As<IAuthService>().SingleInstance();
 			builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
 
-			// tek nesne ütetir
-
-			// bir adet nesne uretir herkes onu kullanır  dikkat data tutmaması gerektir
 
 
 			var assembly = System.Reflection.Assembly.GetExecutingAssembly();

@@ -14,9 +14,12 @@ namespace Businees.Constant
         public static string ProductNameInValid = "ürün ismi geçersiz";
         public static string Maintenancetime = "Zaman aşımı sistem bakımda.";
         public static string ProductsListed = "Ürünler listelendi.";
+       
+        
         public static string AuthorizationDenied = "Yetkiniz yok";
         public static string UserAlreadyExists = "kullanıcı zaten var";
         public static string UserRegistered = "kullanıcı kaydoldu";
+        
         public static string EmailIsUsing = "e posta baska biri tarafından kullanılıyor";
         public static string UserNotFound = "kullanıcı bulunamadı";
         public static string PasswordError = "sifre hathalı";
