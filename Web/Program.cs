@@ -67,6 +67,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.ConfigureCustomExceptionMiddleware();
+
 app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader());/////////
 
 
