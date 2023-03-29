@@ -31,7 +31,7 @@ namespace Businees.Concrete
 			_colorService = colorService;
 		}
 
-	//	[SecuredOperation("admin")]
+		[SecuredOperation("admin")]
         [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
@@ -57,7 +57,6 @@ namespace Businees.Concrete
             return new SuccessResult();
         }
 
-		//[SecuredOperation("admin")]
 		public IDataResult<List<Car>> GetAll()
         {
             return new SuccessDataResult<List<Car>>(_carDal.GetAll());

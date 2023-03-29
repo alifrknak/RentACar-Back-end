@@ -85,7 +85,7 @@ namespace Businees.Concrete
 		{
 			var check = _colorDal.Get(q => q.Name == name);
 
-			return check == null ? new SuccessResult() : new ErrorResult();
+			return check == null ? new SuccessResult() : new ErrorResult("Bu renk zaten var");
 		}
 
 		
