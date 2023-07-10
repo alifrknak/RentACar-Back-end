@@ -72,7 +72,7 @@ namespace Businees.Concrete
             return new SuccessDataResult<Car>(_carDal.Get(q => q.Id == id));
         }
 
-        //view oluştur database de
+        
         public IDataResult<CarDetailDto> GetCarDetails(int carId)
         {
             return new SuccessDataResult<CarDetailDto>(_carDal.GetCarDetails(carId));
@@ -93,11 +93,6 @@ namespace Businees.Concrete
 		}
 
 
-		///
-		//
-		//
-		//
-		///
 
 		private IResult CheckIfCarCountOfModelYearsCorrect(int modelYear)
         {
