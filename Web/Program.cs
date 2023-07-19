@@ -20,20 +20,17 @@ builder.Services.AddCors();
 
 //////////
 ///
-
-// ## YA KADAR OLAN KISIM AUTOFAC Ý KULLANMAYI SAGLAR
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 builder.Host.ConfigureContainer<ContainerBuilder>(options =>
 {
     options.RegisterModule(new AutofacBusinessModule());
 });
-//##
+//
 
 
 var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
-//builder.Services.AddSingleton<ICustomerDal, EfCustomerDal>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	.AddJwtBearer(options =>
